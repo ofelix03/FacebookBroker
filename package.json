@@ -1,0 +1,27 @@
+{
+  "name": "facebook_broker",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "lite-server"
+  },
+  "keywords": [
+    "facebook"
+  ],
+  "author": "Felix Otoo <ofelix03@gmail.com>",
+  "license": "ISC",
+  "dependencies": {
+    "angular": "^1.6.1",
+    "angular-resource": "^1.6.1",
+    "angular-ui-router": "^0.4.2",
+    "font-awesome": "^4.7.0",
+    "jquery": "^3.1.1",
+    "jshint": "^2.9.4",
+    "semantic-ui": "^2.2.7"
+  },
+  "devDependencies": {
+    "lite-server": "^2.2.2"
+  }
+}

@@ -1,0 +1,69 @@
+<!-- Breadcrumb -->
+<div class="breadcrumb">
+	<span href="#" class="item">Albums</span>
+	<i class="fa fa-arrow-right"></i>
+	<span href="#" class="item">{{ vm.photoDetails.getAlbumName() }}</span>
+	<i class="fa fa-arrow-right" ng-show="vm.photoDetails.getName()"></i>
+	<span href="#" class="item">{{ vm.photoDetails.getName() }}</span>
+</div>
+
+<!-- Page content -->
+<div class="content">
+	<div class="photo-section">
+		<img src="{{ vm.photoDetails.getUrl() }}" alt="" class="photo-central">
+		<div class="photo-central-name">{{ vm.photoDetails.getName() }}</div>
+	</div>
+
+	<div class="photo-comments-section">
+		<div class="row">
+			<div class="comments-header">
+				<h3>Comments <span class="label">{{ vm.photoDetails.getCommentsCount() }}</span></h3>
+			</div>
+			<div class="comments-filter-header">
+				<h4>Filter&nbsp;&nbsp;<i class="fa fa-lg fa-caret-down"></i></h4>
+				<ul class="comment-filter-menu">
+					<li class="item"><a href="#" title="">All</a></li>
+					<li class="item"><a href="#" title="">Buyer</a></li>
+					<li class="item"><a href="#" title="">Prospect Buyer</a></li>
+				</ul>
+			</div>
+		</div>	
+
+		<div class="comments">
+			<!-- Comment thread -->
+			<p ng-show="vm.photoDetails.getCommentsCount() === 0" class="text-center"><strong><em>No comments</em></strong></p>
+			<div class="comment-thread response-box-wrapper">
+				<textarea name="response-box" placeholder="New comment goes here..." class="comment-textbox" ng-model="vm.comment.message"></textarea>
+				<button type="button" class="send-btn" ng-click="vm.publishComment(vm.comment.message)">SEND</button>
+			</div>
+			<div ng-repeat="comment in vm.photoDetails.getComments()" class="comment-wrapper">
+				<div class="comment-thread" >
+					<img src="{{ comment.getAuthorAvatar() }}" alt="" class="thread-author-avatar">
+					<div class="thread-message	">
+						<span class="author">{{ comment.getAuthor() }}</span>&nbsp;<span class="date">{{ comment.getCreatedAt() }}</span>
+						<span class="text">{{ comment.getMessage() }}</span>
+						<div class="comment-message-response-action">
+							<i class="action fa fa-reply"></i>&nbsp;&nbsp;<strong>{{comment.getRepliesCount()}}</strong>
+						</div>
+					</div>
+				</div>
+				<div class="comment-thread-responses">
+					<div class="comment-thread response-box-wrapper">
+						<textarea name="response-box" placeholder="Reply goes here..." class="reply-textbox" ng-model="vm.comment.replyMessage"></textarea>
+						<button type="button" class="send-btn" ng-click="vm.publishCommentReply(vm.comment.message, comment.getId())">SEND</button>
+					</div>
+					<div class="comment-thread" ng-repeat="reply in comment.getReplies()">
+						<img ng-src="{{ reply.getAuthorAvatar() }}" alt="" class="thread-author-avatar">
+						<div class="thread-message">
+							<span class="author">{{ reply.getAuthor() }}</span>&nbsp;<span class="date">{{ comment.getCreatedAT() }}</span>
+							<span class="text">{{ reply.getMessage() }}</span>
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+			
+		</div>
+	</div>
+</div>

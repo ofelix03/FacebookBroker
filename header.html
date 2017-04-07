@@ -1,0 +1,28 @@
+<div class="header">
+	<div class="header-left">
+		<a ng-href="/albums" title="Home"><img ng-src="{{ $ctrl.pageInfo.getCover() }}" alt="" class="brand-img"></a>
+		<div class="brand-name">
+			<h3><a ng-href="/album" title="Home">{{ $ctrl.pageInfo.getName() }}</a></h3>
+		</div>
+	</div>
+	<div class="header-right">
+		<img ng-src="{{ $ctrl.pageInfo.getCover() }}" alt="" class="user-avatar">
+		<p class="user-name">{{ $ctrl.pageInfo.getUsername() }}</p>
+		<div class="menu-wrapper">
+			<i class="fa  fa-lg fa-caret-down"></i>
+			<div class="menu">
+				<i class="fa  fa-lg fa-caret-up"></i>
+				<div class="user-name-n-avatar">
+					<img src="/img/appboy.jpeg" alt="" class="user-avatar">
+					<p class="user-name">{{$ctrl.pageInfo.getUsername()}}</p>
+					<p class="clear"></p>
+				</div>
+				<ul class="menu-items">
+					<li class="item"><a href="" title="">Notification <span class="label label-right">3</span></a></li>
+					<li class="item"><a href="" title="">Pages <span class="label">2</span></a></li>
+					<li class="item"><a href="" title="">Logout</a></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,28 @@
+<!-- Breadcrumb -->
+<div class="breadcrumb text">
+	<span href="#" class="item">New Album</span>
+</div>
+
+<div class="action-row action-row-right">
+	<button type="button" class="action-button text" ng-click="vm.publish(vm.album)"><i class="fa fa-check"></i> PUBLISH</button>
+</div>
+
+<!-- Page content -->
+<div class="content">
+	<form class="new-post-form" name="newAlbum" novalidate>
+		<div class="message-box message-box-success" ng-show="vm.isPublished">Album successfully published on your Facebook page: Bookstore <i class="fa fa-times close-btn"></i></div>
+		<div class="message-box message-box-fail" ng-show="vm.isPublishedFailed">Album successfully published on your Facebook page: Bookstore <i class="fa fa-times close-btn"></i></div>
+		<input type="text" name="album-name" placeholder="Album name here..." ng-model="vm.album.name">
+		<textarea type="text" name="album-description" placeholder="Album details here..." ng-model="vm.album.description"></textarea>
+		<image-uploader data-name="vm.name" data-photos="vm.album.photos"></image-uploader>
+		<h4>Uploaded Images <label class="label">{{ vm.album.photos.length }}</label></h4>
+		<div class="uploaded-images">
+			<div class="image-wrapper" ng-repeat="url in vm.album.photos track by $index">
+				<img src="{{ url }}" class="image">
+				<span class="drop-image-button" ng-click="vm.deletePhoto($index)"><i class="fa fa-times"></i></span>
+			</div>
+		</div>
+
+	</form>
+</div>
+

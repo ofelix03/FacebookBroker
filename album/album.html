@@ -1,0 +1,25 @@
+<!-- Breadcrumb -->
+<div class="breadcrumb">
+	<span href="#" class="item">Albums <span class="label">{{vm.albums.length}}</span></span>
+</div>
+
+<div class="action-row action-row-right">
+	<a href="#!/albums/new" title="" class="action-button text">NEW ALBUM <i class="fa fa-plus-circle"></i></a>
+</div>
+
+<!-- Page content -->
+<div class="content">
+	<div class="albums">
+		<div class="album" ng-repeat="album in vm.albums">
+			<a href="#!/albums/{{ album.getId() }}/photos">
+				<div class="images-count">{{album.getPhotosCount()}}</div>
+				<img ng-src="{{album.getCoverPhoto()}}" class="album-image" />
+				<div class="date"><em>{{album.getCreatedAt()}}</em></div>
+				<div class="album-name">{{album.getName()}}</div>
+			</a>
+		</div>
+		
+	</div>
+
+</div>
+

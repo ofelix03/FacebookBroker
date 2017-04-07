@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html ng-app="facebookBrokerApp">
+<head>
+	<title>Facebook Broker</title>
+	<meta name="viewport" content="width=device-width">
+<link rel="icon" 
+      type="image/png" 
+      href='img/appboy.jpeg'>	<link rel="stylesheet" type="text/css" href="node_modules/font-awesome/css/font-awesome.min.css">
+	<link href="https://fonts.googleapis.com/css?family=Raleway|Slabo+27px" rel="stylesheet">
+	<style type="text/css">
+		* {
+			outline: none;
+		}
+
+		html, body{
+			padding: 0px;
+			margin: 0px;
+			font-family: 'Slabo 27px', serif;
+		}
+		.padding-xs {
+			padding: 10px;
+		}
+
+		.padding-sm {
+			padding: 20px;
+		}
+
+		.text {
+			font-family: 'Raleway', sans-serif;
+		}
+
+		.text2 {
+			font-family: 'Slabo 27px', serif;
+		}
+		.text-center {
+			text-align: center;
+		}
+
+		input[placeholder] {
+			font-family: 'Slabo 27px', serif;
+		}
+
+		.label {
+			border-radius: 100px;
+			padding: 4px;
+			background: rgba(221, 221, 221, 0.58);
+			display: inline;
+			font-weight: bold;
+			margin-left: 4px;
+			font-size: 16px;
+			font-family: 'Slabo 27px', serif;
+
+		}
+
+		.label-right {
+		}
+
+		.clear {
+			clear: both;
+		}
+		.row {
+			width: 100%;
+			border: 1px solid;
+		}
+
+		.row:after {
+			content: "";
+			display: block;
+			clear: both;
+		}
+
+		.action-row {
+
+		}
+
+		.action-row-right {
+			text-align: right;
+		}
+
+		.action-row-left {
+			text-align: left;
+		}
+
+		.action-row-center {
+			text-align: center;
+		}
+
+		.action-button {
+			padding: 10px;
+			border: 1px solid rgba(221, 221, 221, 0.58);
+			background: rgba(221, 221, 221, 0.58);
+			border-radius: 10px;
+			margin: 4px;
+			font-weight: bold;
+			outline: none;
+			cursor: pointer;
+			margin-right: 14px;
+			box-shadow: 1px 1px 1px #ccc;
+			font-size: 18px;
+			text-decoration: none;
+			display: inline-block;
+			color: #111;
+		}
+
+		/** Login Page  */
+		.login-page {
+			height: 100%;
+			background: #5380E5;
+			display: block;
+			padding-top: 10%;
+		}
+
+		.login-form {
+			width: 50%;
+			height: 30%;
+			border: 1px solid #867CF0;
+			border-radius: 4px;
+			padding: 5% 10px;
+			margin: auto;
+
+		}
+
+		.form-input {
+			width: 50%;
+			margin: 5px auto;
+			padding: 12px;
+			display: block;
+			border: 1px solid #5380E5;
+			border-radius: 4px;
+			height: 20px;
+			color: #888;
+			font-size: 16px;
+
+		}
+
+
+		.submit-btn {
+			border: 1px solid #5380E5;
+			background: #B5A2A2;
+			color: #FFF;
+			padding: 10px;
+			border-radius: 4px;
+			width: 50%;
+			display: block;
+			margin: auto auto;
+			font-weight: bold;
+		}
+
+
+
+		/** Albums Page */
+		.container {
+			height: 100%;
+		}
+
+		.container:after {
+			content: "";
+			display: block;
+			clear: both;
+		}
+
+		.header {
+			height: auto;
+			border-bottom: 1px solid #CBD6F2;
+			box-shadow: 0.5px 0.5px 1px #ddd;
+		}
+
+		.header:after {
+			content: "";
+			clear: both;
+			display: block;
+		}
+
+		.header a {
+			text-decoration: none;
+			display: block;
+			color: #111;
+		}
+
+		.header-left {
+			height: 100%;
+			font-family: Trebuchet;
+			max-width: 40%;
+			float: left;
+			overflow: hidden;
+		}
+
+		@media screen and (max-width: 780px) {
+			.header-left {
+				width: 40%;
+			}
+		}
+
+		.header-right {
+			float: right;
+			padding-right: 20px;
+			padding-top: 10px;
+		}
+
+		.brand-img {
+			width: 100px;
+			max-width: 100px;
+			height: 80%;
+			float: left;
+			padding: 8px;
+			display: none;
+		}
+
+
+		.brand-name {
+			float: left;
+			height: 100%;
+			line-height: 40px;
+			padding: 0px 4px;
+			font-size: 24px;
+			line-height: 14px;
+		}
+
+		@media screen and (max-width: 780px) {
+			.brand-name {
+				/*display: none;*/
+			}
+		}
+
+
+		.user-avatar {
+			border: 2px solid #CBD6F2;
+			width: 45px;
+			height: 45px;
+			border-radius: 100px;
+			margin-right: 6px;
+			float: left;
+
+		}
+
+		.user-name {
+			display: inline-block;
+			float: left;
+		}
+
+		@media screen and (max-width: 780px) {
+			.user-name {
+				display: none;
+			}
+
+			.user-name-n-avatar .user-name {
+				display: inline-block;
+			}
+		}
+
+		.menu-wrapper {
+			float: left;
+			margin-left: 10px;
+			height: 100%;
+			position: relative;
+		}
+
+		.menu-wrapper .fa {
+			font-size: 40px;
+			line-height: 50px;
+			margin-right:10px;
+		}
+
+		.menu-wrapper .menu {
+			position: absolute;
+			border: 1px solid rgba(221, 221, 221, 0.31);
+			width: 200px;
+			min-height: 150px;
+			right: -5px;
+			top: -8px;
+			border-radius: 4px;
+			background: #FFF;
+			z-index: 1000;
+			box-shadow: 0.5px 0.5px 1px #ddd;
+			display: none;
+		}
+
+		.menu-wrapper:hover .menu{
+			display: block;
+		}
+
+
+		.menu .fa {
+			position: absolute;
+			top: 4px;
+			right: 4px;
+			color: rgba(221, 221, 221, 0.31);
+		}
+
+		.menu > .user-name-n-avatar {
+			padding-left: 28px;
+			margin-top: 6px;
+			border-bottom: 1px solid rgba(221, 221, 221, 0.31);
+			margin-bottom: 4px;
+			padding-bottom: 6px;
+		}
+
+		.menu > .user-name-n-avatar:after {
+			content: "";
+			display: block;
+			clear: both;
+		}
+
+		.menu .menu-items {
+			list-style: none;
+			padding: 0px;
+			margin: 0px;
+		}
+
+		.menu-items a {
+			text-decoration: none;
+			color: #555;
+			display: block;
+		}
+
+		.menu-items .item {
+			padding: 6px 10px;
+			border-bottom: 1px solid rgba(221, 221, 221, 0.31);
+		}
+
+		.menu-items .item:last-child{
+			border-bottom: none;
+		}
+
+		.breadcrumb {
+			/*width: 100%;*/
+			border-bottom: : 1px solid #F9F8DD;
+			padding: 10px 20px;
+		}
+
+		.breadcrumb .item {
+			vertical-align: middle;
+			text-decoration: none;
+		}
+
+		.content {
+			/*border: 1px solid #379CC3;*/
+			width: 90%;
+			height: 100%;
+			margin: auto auto;
+			display: block;
+		}
+
+		@media screen and (max-width: 780px) {
+			.content {
+				width: 100%;
+			}
+		}
+
+		@media screen and (min-width: : 781px) and (max-width: 1200px) {
+			.content {
+				width: 90%;
+			}
+		}
+
+		.content:after {
+			content: "";
+			clear: both;
+			display: block;
+		}
+
+
+		.albums {
+			padding: 20px 30px;
+			clear: both;
+		}
+
+		.albums:after {
+			content: "";
+			display: block;
+			clear: both;
+		}
+
+		.albums a {
+			text-decoration: none;
+			color: #241212;
+		}
+
+		.album {
+			width: 20%;
+			height: auto;
+			margin: 2%;
+			float: left;
+			border: 1px solid #F0E3E3;
+			border-radius: 4px;
+			box-shadow: 2px 2px 1px #ddd;
+			overflow: hidden;
+			position: relative;
+		}
+
+		@media screen and (max-width: 780px) {
+			.album {
+				width: 45%;
+			}
+		}
+
+		@media screen and (min-width: 781px) and (max-width: 1200px) {
+			.album {
+				width: 28%;
+			}
+		}
+
+		.album .images-count {
+			/*width: 10px;*/
+			height: auto;
+			text-align: center;
+			line-height: 10px;
+			font-weight: bold;
+			/*padding: 10px;*/
+			border-radius: 100px;
+			background: #FFF;
+			color: #111;
+			position: absolute;
+			right: 8px;
+			top: 8px;
+			padding: 10px;
+		}
+
+
+		.album .album-image {
+			height: 150px;
+			width: 100%;
+			display: block;
+		}
+
+		.album .album-name{
+			padding: 10px;
+			text-align: center;
+		}
+
+		.album .date {
+			font-size: 12px;
+			padding: 4px;
+		}
+
+		/** Photos */
+		.photos {
+			margin-top: 20px;
+		}
+
+
+		.photos:after {
+			content: "";
+			display: block;
+			clear: both;
+		}
+
+		.photo-wrapper {
+			width: 45%;
+			float: left; 
+			margin: 10px 0px;	
+			position: relative;
+			/*border: 1px solid red;*/
+		}
+
+		@media screen and (max-width: 780px) {
+			.photo-wrapper {
+				margin-left: 15px;
+			}
+		}
+
+
+
+		.photo-wrapper .drop-photo-btn {
+			position: absolute;
+			background-color: #ddd;
+			padding: 4px;
+			transition: all 1s ease-in-out;
+			cursor: pointer;
+			border-radius: 4px;
+			z-index: 100;
+			left: 8px;
+			top: 10px;
+		}
+
+		
+		.photo {
+			width: 100px;
+			height: 100px;
+			float: left;
+			margin-right: 6px;
+			margin-bottom: 10px;
+		}
+
+		@media screen and (max-width: 780px) {
+			.photo {
+				width: 100%;
+				height: 150px;
+			}
+		}
+
+		.photo-data {
+			padding: 0px;
+			list-style: none;
+		}
+
+
+		.photo-data .datum {
+			margin: 10px 0px;
+		}
+
+		/** PhotoDetails */
+		.photo-section {
+			width: 30%;
+			float: left;
+			margin-top: 20px;
+		}
+
+		@media screen and (max-width: 780px) {
+			.photo-section {
+				float: none;
+				width: 50%;
+				margin: auto auto;
+				margin-bottom: 10px;
+			}
+
+			.photo-central {
+				width: 100%;
+				margin-bottom: 4px;
+			}
+
+		}
+
+		.photo-central {
+			width: 200px;
+			height: 200px;
+		}
+
+
+		.photo-comments-section {
+			width: 65%;
+			float: right;
+		}
+
+		@media screen and (max-width: 780px) {
+			.photo-comments-section {
+				width: 96%;
+				float: none;
+				margin: 30px auto;
+			}
+		}
+
+		.comments-header {
+			float: left;
+			max-width: 50%;
+			margin-left: 10px;
+		}
+
+		.comments-filter-header {
+			float: right;
+			max-width: 50%;
+			padding: 0px 20px;
+			position: relative;
+		}
+
+		.comments-filter-header:hover .comment-filter-menu {
+			display: block;
+		}
+
+		.comment-filter-menu {
+			width: 120px;
+			margin: 0px;
+			padding: 0px;
+			border: 1px solid rgba(221, 221, 221, 0.31);
+			background: #FFF;
+			box-shadow: 0.5px 0.5px 1px #ddd;
+			list-style: none;
+			position: absolute;
+			top: -18px;
+			left: -12px;
+			border-radius: 4px;
+			text-align: center;
+			display: none;
+		}
+
+		.comment-filter-menu--show {
+			display: block;
+		}
+
+		.comment-filter-menu .item {
+			padding: 5px;
+			border-bottom: 1px solid rgba(221, 221, 221, 0.31);
+		}
+
+		.comment-filter-menu .item:last-child {
+			border: none;
+		}
+
+		.comment-filter-menu .item > a {
+			text-decoration: none;
+			display: block;
+			color: #555;
+		}
+
+
+		.comments {
+			padding-top: 30px;
+		}
+
+		.comment-wrapper {
+
+		}
+
+		.comment-wrapper:after {
+			clear:  both;
+			display: block;
+			content: "";
+		}
+
+		.comment-thread{
+			position: relative;
+			width: 70%;
+			margin: auto;
+			margin-bottom: 15px;
+			box-shadow: 0.5px 0.5px 1px #ddd;
+			border-radius: 4px;
+		}
+
+		.comment-thread:after {
+			content: "";
+			clear: both;
+			display: block;
+		}
+
+		@media screen and (max-width: 780px) {
+			.comment-thread, .response-box{
+				width: 100%;
+			}
+		}
+
+		.comment-thread-responses {
+			width: 80%;
+			margin-left: 16%;
+		}
+
+		.thread-author-avatar {
+			width: 50px;
+			height: 50px;
+			border-radius: 50px;
+			position: absolute;
+			left: 30px;
+			top: -20px;
+
+		}
+
+		.thread-message {
+			border: none;
+			text-align: left;
+			padding: 30px 10px 2px 10px;
+			border-radius: 4px;
+			background: #F2F1F1;
+			margin-bottom: 25px;
+		}
+
+		.thread-message .author {
+			position: absolute;
+			left: 86px;
+			top: 4px;
+			font-size: 12px;
+			font-weight: 500;
+		}
+
+		.thread-message .date {
+			position: absolute;
+			right: 16px;
+			top: 8px;
+			font-size: 12px;
+		}
+
+		.comment-message-response-action {
+			text-align: right;
+			margin-right: 20px;
+			cursor: pointer;
+		}
+
+		.comment-message-response-action .action {
+
+		}
+
+		.response-box-wrapper {
+			position: relative;
+			width: 70%;
+			margin: auto;
+			margin-bottom: 30px;
+		}
+
+		.response-box-wrapper .send-btn {
+			border: 1px solid #ccc;
+			padding: 4px;
+			float: right;
+		}
+
+		.response-box-wrapper .send-btn:after {
+			content: "";
+			clear: both;
+			display: block;
+		}
+
+
+
+		@media screen and (max-width: 780px) {
+			.response-box-wrapper {
+				width: 100%;
+			}
+		}
+
+		/*.response-box:after {
+			clear: both;
+			content: "";
+			display: block;
+		}
+		*/
+		.response-box-wrapper textarea {
+			border: none;
+			height: 15px;
+			padding: 10px;
+			resize: none;
+			padding-bottom: 30px;
+		}
+
+		.reply-textbox {
+			width: 100%;
+			margin: auto;
+		}
+
+		.comment-textbox {
+			width: 100%;
+			height: 24px;
+			margin: auto;
+			border: none;
+		}
+
+		/** New Post */
+		.uploaded-images {
+		}
+
+		.uploaded-images:after {
+			content: "";
+			clear: both;
+			display: block;
+		}
+
+		.uploaded-images .image-wrapper {
+			float: left;
+			border: 1px solid #ccc;
+			width: 120px;
+			height: 120px;
+			float: left;
+			margin: 5px;
+			position: relative;
+		}
+
+		.uploaded-images .image-wrapper img {
+			width: 100%;
+			height: 100%;
+		}
+
+		.uploaded-images .image-wrapper .drop-image-button {
+			position: absolute;
+			top: 10px;
+			right: 10px;
+			background-color: #ddd;
+			padding: 4px;
+			transition: all 1s ease-in-out;
+			display: none;
+			cursor: pointer;
+			border-radius: 4px;
+		}
+
+		.uploaded-images .image-wrapper:hover .drop-image-button {
+			display: block;
+		}
+
+		.new-post-form {
+			width: 60%;
+			margin: 0px auto;
+			border: 1px solid none;
+			box-shadow: 0.5px 0.5px 1px #ddd, -0.5px -0.5px 1px #ddd;
+			padding: 40px 20px;
+			border-radius: 4px;
+			display: block;
+			margin-bottom: 100px;
+			margin-top: 30px;
+
+		}
+
+		@media screen and (max-width: 780px) {
+			.new-post-form {
+				width: 85%;
+				margin-top: 20px;
+			}
+		}
+
+
+		.new-post-form input,
+		.new-post-form textarea{
+			width: 96%;
+			border: 2px solid rgba(221, 221, 221, 0.17);
+			border-radius: 4px;
+			padding: 10px;
+			line-height: 20px;
+			margin-top: 5px;
+			background: rgba(221, 221, 221, 0.06);
+			color: #888;
+			resize: none;
+			font-size: 14px;
+			font-family: 'Slabo 27px', serif;
+		}
+
+
+
+		#image-drop-zone {
+			border: 2px dashed rgba(221, 221, 221, 0.17);
+			border-radius: 4px;
+			margin-top: 16px;
+			padding: 10px;
+			width: 96%;
+			text-align: center;
+			color: #888;
+			background: rgba(221, 221, 221, 0.06);
+		}
+
+		.or-wrapper {
+			position: relative;
+			text-align: center;
+			margin: 0px;
+		}
+
+		.or-wrapper:after {
+			content: "";
+			height: 0.5px;
+			background: rgba(238, 238, 238, 0.47);
+			position: absolute;;
+			left: 0px;
+			right: 0px;
+			top: 50%;
+			z-index: 5;
+
+		}
+
+		.or-wrapper .or-text {
+			/*position: absolute;*/
+			background: #FFF;
+			padding: 4px;
+			position: absolute;
+			top: -15px;
+			z-index: 10;
+			color: #999;
+			text-transform: lowercase;
+		}
+
+		.message-box {
+			border-radius: 4px;
+			font-size: 14px;
+			padding: 10px;
+			position: relative;
+			padding-right: 30px;
+		}		
+
+		.message-box-success {
+			border: 1px solid rgba(0, 128, 0, 0.43);
+			color: green;
+			background: rgba(155, 255, 0, 0.31);
+		}
+
+		.message-box-fail {
+			border: 1px solid rgba(255, 0, 0, 0.57);
+			color: rgba(255, 0, 0, 0.57);
+			background: rgba(255, 0, 0, 0.32);
+		}
+
+
+		.message-box .close-btn {
+			position: absolute;
+			right: 10px;
+			top: 10px;
+			font-size: 20px;
+			cursor: pointer;
+		}
+	</style>
+</head>
+<body>
+	<div class="container">
+		<!-- Page content goes here -->
+		<ui-view></ui-view>
+	</div>
+
+	<script type="text/javascript" src="node_modules/jquery/dist/jquery.min.js"></script>
+	<script type="text/javascript" src="node_modules/angular/angular.min.js"></script>
+	<script type="text/javascript" src="node_modules/angular-ui-router/release/angular-ui-router.min.js"></script>
+	<script type="text/javascript" src="node_modules/angular-resource/angular-resource.min.js"></script>
+
+
+	<script type="text/javascript" src="app.js"></script>
+	<!-- Services -->
+	<script type="text/javascript" src="album/facebook.service.js"></script>
+	<script type="text/javascript" src="album/local-storage.service.js"></script>
+
+	<script type="text/javascript" src="app.controller.js"></script>
+	<script type="text/javascript" src="login/login.module.js"></script>
+	<script type="text/javascript" src="login/login.component.js"></script>
+	<script type="text/javascript" src="login/login.controller.js"></script>
+
+	<script type="text/javascript" src="header-component.js"></script>
+	<script type="text/javascript" src="album/album.module.js"></script>
+	<script type="text/javascript" src="album/album.controller.js"></script>
+	<script type="text/javascript" src="album/photos.controller.js"></script>
+
+	<script type="text/javascript" src="album/new-album.controller.js"></script>
+	<script type="text/javascript" src="album/photo-details.controller.js"></script>
+	<script type="text/javascript" src="album/image-uploader-directive.js"></script>
+
+	<script type="text/javascript" src="album/models.js"></script>
+
+
+
+</body>
+</html>
