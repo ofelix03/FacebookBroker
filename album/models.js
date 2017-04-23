@@ -3,22 +3,67 @@
 var ModelParserUtil = {
 	parseToPhotoObject: parseToPhotoObject,
 	parseToCommentObject: parseToCommentObject,
+	parseToAlbumObject: parseToAlbumObject,
+	parseToPageObject: parseToPageObject,
+}
+
+function parseToPageObject(response) {
+	var page = new Page();
+	page.setName(response.name);
+	page.setUsername(response.username);
+	page.setCover(response.picture.data.url);
+
+	return page;
+}
+
+function parseToAlbumObject(data) {
+	console.log('parse album data', data);
+	album = new Album();
+	album.setId(data.id);
+	album.setName(data.name);	
+	album.setDescription(data.description);
+	album.setPhotosCount(data.count);
+	if (data.cover_photo !== undefined) {
+		album.setCoverPhoto(data.cover_photo.images[0].source);
+	}
+
+	return album;
 }
 
 function parseToPhotoObject(data) { 
-	photo = new Photo();
+	var photo = new Photo();
 	photo.setId(data.id);
 	photo.setUrl(data.source);
-	photo.setAlbumName(data.album.name);
-	photo.setAlbumId(data.album.id);
+	photo.setAlbum(new Album(data.album));
 	photo.setName(data.name);
 
+	if (data.comments !== undefined) {
+		var commentsArray = data.comments.data;
+		var commentObject, comments = [];
+		for(var i = 0; i < commentsArray.length; i++) {
+			commentObject = commentsArray[i];
+			comments[i] = parseToCommentObject(commentObject);
+			// Let's parse comment's replies
+			if (commentObject.comments !== undefined) {
+				var repliesArray = [], replyObject, reply; replies = [];
+				repliesArray = commentObject.comments.data;
+				for(var j = 0; j < repliesArray.length; j++) {
+					replyObject = repliesArray[j];
+					replies[j] = parseToCommentObject(replyObject);
+				}
+				comments[i].setReplies(replies);
+			}
+			console.log("SettingComments", comments);
+			photo.setComments(comments);
+		}
+	}
+	console.log('parsePhotoWithComment', photo);
 	return photo;
 }
 
 function parseToCommentObject(data) {
 	console.log("parseData", data);
-	comment = new Comment();
+	var comment = new Comment();
 	comment.setId(data.id);
 	comment.setAuthor(data.from.name);
 	comment.setAuthorId(data.from.id);
@@ -26,6 +71,7 @@ function parseToCommentObject(data) {
 	comment.setMessage(data.message);
 	comment.setCreatedAt(data.created_time);
 
+	console.log("parsedComment", comment);
 	return comment;
 }
 
@@ -71,7 +117,8 @@ Page.prototype = {
 function Album() {
 	/** Properties */
 	this.id = "";
-	this.name = ""
+	this.name = "";
+	this.description = "";
 	this.photos = [];
 	this.created_at = "";
 	this.photosCount = 0;
@@ -94,6 +141,10 @@ Album.prototype = {
 	 	this.name = name;
 	 },
 
+	 setDescription: function(description) {
+	 	this.description = description;
+	 },
+
 	/**
 	 * @param {Integer} count [description]
 	 */
@@ -113,6 +164,10 @@ Album.prototype = {
 	 */
 	 getName: function() {
 	 	return this.name;
+	 },
+
+	 getDescription: function() {
+	 	return this.description;
 	 },
 
 	/**
@@ -172,31 +227,39 @@ Album.prototype = {
 	function Photo() {
 		this.id = "";
 		this.name =  "";
-		this.commentsCount = 0;
 		this.buyers = 0;
 		this.prospectBuyers = 0;
 		this.comments = [];
 		this.url = "";
 		this.albumId = "";
 		this.albumName = "";
+		this.album = new Album();
 	}
 
 	Photo.prototype  = {
 
+		getAlbum: function() {
+			return this.album;
+		}, 
+
+		setAlbum: function(album) {
+			this.album = album;
+		},
+
 		setAlbumName: function(name) {
-			this.albumName = name;
+			this.album.setName(name);
 		},
 
 		getAlbumName: function() {
-			return this.albumName;
+			return this.album.getName();
 		},
 
 		setAlbumId: function(id) {
-			this.albumId = id;
+			this.album.setId(id);
 		},
 
 		getAlbumId: function() {
-			return this.albumId;
+			return this.album.getId();
 		},
 
 		setId: function(id) {
@@ -231,7 +294,7 @@ Album.prototype = {
 
 	 getComment: function(index) {
 	 	if (this.comments[index] !== undefined) {
-		 	return this.comments[index];
+	 		return this.comments[index];
 	 	}
 
 	 	return new Comment();
@@ -256,11 +319,7 @@ Album.prototype = {
 	 * @return {Integer} [description]
 	 */
 	 getCommentsCount: function() {
-	 	if (this.commentsCount == 0 ) {
-	 		this.commentsCount = this.comments.length;
-	 	}
-
-	 	return this.commentsCount;
+	 	return this.comments.length;
 	 },
 
 	/**
@@ -326,7 +385,6 @@ Album.prototype = {
 		this.message = "";
 		this.createdAt = "";
 		this.replies = [];
-		this.repliesCount = 0;
 		this.author = "";
 		this.authorAvatar = "";
 		this.authorId = "";
@@ -342,86 +400,86 @@ Album.prototype = {
 			return this.id;
 		},
 
-	/**
-	 * @param {String} message [description]
-	 */
-	 setMessage: function(message) {
-	 	this.message = message;
-	 },
+		/**
+		 * @param {String} message [description]
+		 */
+		 setMessage: function(message) {
+		 	this.message = message;
+		 },
 
-	/**
-	 * @return {String} [description]
-	 */
-	 getMessage: function() {
-	 	return this.message;
-	 },
+		/**
+		 * @return {String} [description]
+		 */
+		 getMessage: function() {
+		 	return this.message;
+		 },
 
-	/**
-	 * @param {String} createdAt [description]
-	 */
-	 setCreatedAt: function(createdAt) {
-	 	this.createdAt = createdAt;
-	 },
+		/**
+		 * @param {String} createdAt [description]
+		 */
+		 setCreatedAt: function(createdAt) {
+		 	this.createdAt = createdAt;
+		 },
 
-	/**
-	 * @return {String} [description]
-	 */
-	 getCreatedAt: function() {
-	 	return this.createdAt;
-	 },
+		/**
+		 * @return {String} [description]
+		 */
+		 getCreatedAt: function() {
+		 	return this.createdAt;
+		 },
 
-	/**
-	 * @param {Comment[]} replies [description]
-	 */
-	 setReplies: function(replies) {
-	 	this.replies = replies;
-	 },
+		/**
+		 * @param {Comment[]} replies [description]
+		 */
+		 setReplies: function(replies) {
+		 	this.replies = replies;
+		 },
 
+		 setReply: function(reply) {
+		 	this.replies[this.replies.length] = reply
+		 },
 
-	/**
-	 * @param  {Integer} index [description]
-	 * @return {Comment}       [description]
-	 */
-	 getReply: function(index) {
-	 	return this.replies[index];
-	 },
+		/**
+		 * @param  {Integer} index [description]
+		 * @return {Comment}       [description]
+		 */
+		 getReply: function(index) {
+		 	return this.replies[index];
+		 },
 
-	 getRepliesCount() {
-	 	if (this.repliesCount == 0) {
-	 		this.repliesCount = this.replies.length;
-	 	}
-	 	return this.repliesCount;
-	 },
+		 getRepliesCount() {
+		 	return this.replies.length;
+		 },
 
-	/**
-	 * @return {Comment[]} [description]
-	 */
-	 getReplies: function() {
-	 	return this.replies;
-	 },
+		/**
+		 * @return {Comment[]} [description]
+		 */
+		 getReplies: function() {
+		 	return this.replies;
+		 },
 
-	 setAuthor: function(author) {
-	 	this.author = author;
-	 },
+		 setAuthor: function(author) {
+		 	this.author = author;
+		 },
 
-	 getAuthor: function() {
-	 	return this.author;
-	 },
+		 getAuthor: function() {
+		 	return this.author;
+		 },
 
-	 setAuthorAvatar: function(avatar) {
-	 	this.authorAvatar = avatar;
-	 },
+		 setAuthorAvatar: function(avatar) {
+		 	this.authorAvatar = avatar;
+		 },
 
-	 getAuthorAvatar: function() {
-	 	return this.authorAvatar;
-	 },
+		 getAuthorAvatar: function() {
+		 	return this.authorAvatar;
+		 },
 
-	 setAuthorId: function(id) {
-	 	this.authorId= id;
-	 },
+		 setAuthorId: function(id) {
+		 	this.authorId= id;
+		 },
 
-	 getAuthorId: function() {
-	 	return this.authorId;
-	 },
+		 getAuthorId: function() {
+		 	return this.authorId;
+		 },
 
-	}
+		}

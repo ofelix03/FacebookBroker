@@ -49,13 +49,13 @@
 				</div>
 				<div class="comment-thread-responses">
 					<div class="comment-thread response-box-wrapper">
-						<textarea name="response-box" placeholder="Reply goes here..." class="reply-textbox" ng-model="vm.comment.replyMessage"></textarea>
-						<button type="button" class="send-btn" ng-click="vm.publishCommentReply(vm.comment.message, comment.getId())">SEND</button>
+						<textarea name="response-box" placeholder="Reply goes here..." class="reply-textbox" ng-model="vm.comment.replyMessage[$index]"></textarea>
+						<button type="button" class="send-btn" ng-click="vm.publishCommentReply(vm.comment.replyMessage[$index], comment.getId())">SEND</button>
 					</div>
 					<div class="comment-thread" ng-repeat="reply in comment.getReplies()">
 						<img ng-src="{{ reply.getAuthorAvatar() }}" alt="" class="thread-author-avatar">
 						<div class="thread-message">
-							<span class="author">{{ reply.getAuthor() }}</span>&nbsp;<span class="date">{{ comment.getCreatedAT() }}</span>
+							<span class="author">{{ reply.getAuthor() }}</span>&nbsp;<span class="date">{{ comment.getCreatedAt() }}</span>
 							<span class="text">{{ reply.getMessage() }}</span>
 						</div>
 					</div>

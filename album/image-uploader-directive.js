@@ -19,7 +19,6 @@
 			var albumPhotos = scope.photos;
 			var selectorElement  = angular.element(".image-selector");
 			selectorElement.on("change", function(){
-				console.log('onchange triggered');
 				handleFiles(this.files);
 			});
 
@@ -58,21 +57,13 @@
 					}
 
 					var reader = new FileReader();
-					reader.onload = (function(window, uploadedImagesElement, albumPhotos, file) { 
+					reader.onload = (function(window, albumPhotos) { 
 						return function(e) { 
-							console.log("image loaded");
 							scope.$apply(function(){
 								albumPhotos[albumPhotos.length] = e.target.result;
-							})
+							});
 						}; 
-					})(window, uploadedImagesElement,albumPhotos, file);
-
-					// reader.onloadstart = (function(window, uploadedImagesElement) { 
-					// 	return function(e) { 
-					// 		console.log("image loading");
-					// 	}; 
-					// })(window, uploadedImagesElement);
-
+					})(window,albumPhotos);
 					reader.readAsDataURL(file);
 				}
 			}

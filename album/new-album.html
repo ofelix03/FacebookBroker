@@ -1,19 +1,32 @@
 <!-- Breadcrumb -->
-<div class="breadcrumb text">
-	<span href="#" class="item">New Album</span>
+<div class="breadcrumb text" ng-switch="vm.isNewAlbum">
+	<div ng-switch-when="false" >
+		<a href="#!/albums" class="item">Albums</a>
+		<i class="fa fa-arrow-right"></i>
+		<a href="#!/albums/{{vm.album.id}}/photos" class="item">{{ vm.album.name}}</a>
+	</div>
+	<div ng-switch-when="true">
+		<a href="#!/albums" class="item">Albums</a>
+		<i class="fa fa-arrow-right"></i>
+		<span href="#" class="item">New Album</span>
+	</div>
 </div>
 
 <div class="action-row action-row-right">
-	<button type="button" class="action-button text" ng-click="vm.publish(vm.album)"><i class="fa fa-check"></i> PUBLISH</button>
+	<button type="button" class="action-button text" ng-click="vm.publish(vm.album)">
+		<i class="fa fa-check" ng-show="vm.isPublishing !== true"></i>
+		<i class="fa fa-spinner fa-spin" ng-show="vm.isPublishing === true"></i>
+		PUBLISH
+	</button>
 </div>
 
 <!-- Page content -->
 <div class="content">
 	<form class="new-post-form" name="newAlbum" novalidate>
-		<div class="message-box message-box-success" ng-show="vm.isPublished">Album successfully published on your Facebook page: Bookstore <i class="fa fa-times close-btn"></i></div>
-		<div class="message-box message-box-fail" ng-show="vm.isPublishedFailed">Album successfully published on your Facebook page: Bookstore <i class="fa fa-times close-btn"></i></div>
-		<input type="text" name="album-name" placeholder="Album name here..." ng-model="vm.album.name">
-		<textarea type="text" name="album-description" placeholder="Album details here..." ng-model="vm.album.description"></textarea>
+		<div class="message-box message-box-success" ng-show="vm.isPublished">Album successfully published on your Facebook page: Bookstore <i class="fa fa-times close-btn" ng-click="vm.hidePublishSuccessFeedback()"></i></div>
+		<div class="message-box message-box-fail" ng-show="vm.isPublishedFailed">Album publication to Facebook page: Bookstore, failed <i class="fa fa-times close-btn" ng-click="vm.hidePublishFailFeedback()"></i></div>
+		<input type="text" name="album-name" placeholder="Album name here..." ng-model="vm.album.name" ng-disabled="vm.isNewAlbum === false">
+		<textarea type="text" name="album-description" placeholder="Album details here..." ng-model="vm.album.description" ng-disabled="vm.isNewAlbum === false"></textarea>
 		<image-uploader data-name="vm.name" data-photos="vm.album.photos"></image-uploader>
 		<h4>Uploaded Images <label class="label">{{ vm.album.photos.length }}</label></h4>
 		<div class="uploaded-images">

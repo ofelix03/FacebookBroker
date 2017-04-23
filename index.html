@@ -3,9 +3,9 @@
 <head>
 	<title>Facebook Broker</title>
 	<meta name="viewport" content="width=device-width">
-<link rel="icon" 
-      type="image/png" 
-      href='img/appboy.jpeg'>	<link rel="stylesheet" type="text/css" href="node_modules/font-awesome/css/font-awesome.min.css">
+	<link rel="icon" 
+	type="image/png" 
+	href='img/appboy.jpeg'>	<link rel="stylesheet" type="text/css" href="node_modules/font-awesome/css/font-awesome.min.css">
 	<link href="https://fonts.googleapis.com/css?family=Raleway|Slabo+27px" rel="stylesheet">
 	<style type="text/css">
 		* {
@@ -895,7 +895,6 @@
 	<!-- Services -->
 	<script type="text/javascript" src="album/facebook.service.js"></script>
 	<script type="text/javascript" src="album/local-storage.service.js"></script>
-
 	<script type="text/javascript" src="app.controller.js"></script>
 	<script type="text/javascript" src="login/login.module.js"></script>
 	<script type="text/javascript" src="login/login.component.js"></script>
@@ -907,11 +906,29 @@
 	<script type="text/javascript" src="album/photos.controller.js"></script>
 
 	<script type="text/javascript" src="album/new-album.controller.js"></script>
+	<script type="text/javascript" src="album/add-new-album-photo.controller.js"></script>
 	<script type="text/javascript" src="album/photo-details.controller.js"></script>
 	<script type="text/javascript" src="album/image-uploader-directive.js"></script>
 
 	<script type="text/javascript" src="album/models.js"></script>
+	<script type="text/javascript" src="facebook-sdk.js"></script>
 
+	<script  type="text/javascript">
+		var token = "EAACEdEose0cBACTBt9FPJcPBoZCvCC3p7nlbXHZCZADKodSkTi3cuhxdMdyX2ejD9HmqBuiYvnZAbdBJ0g9oNSGcwGGiQbhJOuORWfWzZCzN2V0IZB20LjRwnLcJffmNGQqhv5YWfPWBUTtFKZAXmMGWYadAYeEiptplAWV6VLEEDIy4aTTWHCbgtjTtuZAoyEsZD";
+
+		FB.init({ 
+			appId: '1028957697237370',
+			status: true, 
+			cookie: true, 
+			xfbml: true,
+			version: 'v2.4'
+		});
+
+		FB.getLoginStatus(function(response) {
+			console.log("myresponse", response);
+		});
+
+	</script>
 
 
 </body>

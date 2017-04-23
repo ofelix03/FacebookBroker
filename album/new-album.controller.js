@@ -1,55 +1,83 @@
 angular.module("album")
 .controller("NewAlbumController", NewAlbumController);
 
-NewAlbumController.$inject = ['FacebookService'];
-function NewAlbumController(FacebookService) {
-	this.album = {
+NewAlbumController.$inject = ['$scope', 'FacebookService', 'LocalStorage'];
+function NewAlbumController($scope, FacebookService, LocalStorage) {
+	vm = this
+	vm.album = {
 		name: "",
 		description: "",
 		photos: [],
 	};
 
-	this.isPbublished = false;
-	this.isPublishedFailed = false;
+	vm.isNewAlbum = true;
 
-	this.publish = publish;
-	this.deletePhoto = deletePhoto;
+	vm.isPublishing = false;
+	vm.isPublished = false;
+	vm.isPublishedFailed = false;
+	vm.hidePublishSuccessFeedback = hidePublishSuccessFeedback;
+	vm.showPublishSuccessFeedback = showPublishSuccessFeedback
+	vm.hidePublishFailFeedback = hidePublishFailFeedback
+	vm.showPublishFailFeedback = showPublishFailFeedback
 
-
+	vm.publish = publish;
+	vm.deletePhoto = deletePhoto;
 
 	/** Functions */
 	function publish(album) {
-		this.album = album;
-		console.log('publish now', album);
+		vm.album = album;
 		var params = {
 			name: album.name,
 			description: album.description,
-		}
+		}	
+
+		vm.isPublishing = true;
+
 		FacebookService.publishNewAlbum(params, null, function(data){
 			console.log("positive reponse", data);
-			var dataURItoBlob = function(dataURI) {
-				var byteString = atob(dataURI.split(',')[1]);
-				var ab = new ArrayBuffer(byteString.length);
-				var ia = new Uint8Array(ab);
-				for (var i = 0; i < byteString.length; i++) {
-					ia[i] = byteString.charCodeAt(i);
-				}
-				return new Blob([ab], { type: 'image/png' });
-			}
-
 			if (data.id !== null) {
-				// Go ahead and publsih the photos
-				console.log("Data ID " + data.id);
-				var accessToken = "EAACEdEose0cBADs0jpFtHdgVaPast1xAEYc9UZACJ7QUfRywiFxPIfxJPauvZCits0kEvpFpcHnmcKmJAJugPCfaS6VVmT6ugN62TRAWlrdysdmUcoRq7DNxuzvWWXZB5BjNYNaC6u8eV5YBXQnTPIY9JtHxX7uvlIQdUdzDFmkkh8BMvFz3sgZAERarZBZAQZD";
-				var parameters = {albumId: data.id}
-				var requestPayload = {albumId: data.id, source: "%7B" + album.photos[0] + "%7D", "access_token": accessToken}
-				console.log("payload is ", parameters, requestPayload)
-				FacebookService.publishNewPhoto(requestPayload, null, function(data) {
-					console.log("photo upload successful", data)
-				}, function(data) {
-					console.log("photo uploa failed ", data)
-				})
+				var albumId = data.id;
+				// Go ahead and publish the photos
+				uploadedPhotos = album.photos.length
+				for (var i = 0; i < album.photos.length; i++) {
+					photo = dataURItoBlob(album.photos[i])
+					var fd = new FormData();
+					fd.append('source', photo);
+					FacebookService.publishNewPhoto({albumId: albumId}, fd, function(data){
+						uploadedPhotos -= 1
+						if (uploadedPhotos == 0) {
+							console.log("fetch fotos with album id " + albumId);
+							FacebookService.getPhotos({albumId: albumId}, null, function(response) {
+								console.log("positive response", response);
+								var photos = {
+									"albumId": albumId,
+									"photos": {
+										"data": response.data,
+									}
+								};
+								console.log("photos data", photos);
+								LocalStorage.putPhotos(albumId, photos);
+								console.log("album info", response.data[0].album);
+								LocalStorage.putAlbum(response.data[0].album);
+							}, function(response) {
+								console.log("fail response", response);
+							});
+							vm.showPublishSuccessFeedback()
+						} else {
+							console.log("UPloaded photos is > 0")
+						}
+					}, function(data){
+						vm.showPublishFailFeedback()
+					});
+				}
 				
+				function dataURItoBlob(dataURI) {
+					var byteString = atob(dataURI.split(',')[1]);
+					var ab = new ArrayBuffer(byteString.length);
+					var ia = new Uint8Array(ab);
+					for (var i = 0; i < byteString.length; i++) { ia[i] = byteString.charCodeAt(i); }
+						return new Blob([ab], { type: 'image/jpeg' });
+				}
 			} else {
 				console.log("No album id")
 			}
@@ -58,39 +86,27 @@ function NewAlbumController(FacebookService) {
 		});
 	}
 
-	function buildBatchArray(albumId, photos) {
-		var batch = [];
-		var photo;
-		for(var i = 0; i < photos.length; i++) {
-			photo= photos[i];
-			batch[i] = {
-				method: "POST",
-				relative_url:  albumId + "/photos",
-				body: {
-					source: photo
-				}
-			};
-		}
-
-		// console.log("batches", batch);
-		return batch;
-	}
-
-	// function buildQueryStringFromJsonObject(object) {
-	// 	var queryString = "{";
-	// 	for(var i = 0; i < object.length; i++) {
-	// 		if (i <)
-	// 	}
-
-	// 	queryString += "}";
-
-	// 	return queryString;
-	// }
-	
-
 	function deletePhoto(index) {
 		console.log("deleting photo with index of " + index);
-		this.album.photos.splice(index, 1);
+		vm.album.photos.splice(index, 1);
+	}
+
+	function hidePublishSuccessFeedback() {
+		console.log("hidePublishSuccess")
+		vm.isPublished = false;
+	}
+
+	function showPublishSuccessFeedback() {
+		vm.isPublished = true;
+		vm.isPublishing = false;
+	}
+
+	function hidePublishFailFeedback() {
+		vm.isPublishedFailed = false;
+	}
+
+	function showPublishFailFeedback() {
+		vm.isPublishedFailed = true;
 	}
 
 	

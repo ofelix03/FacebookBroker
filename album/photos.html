@@ -2,22 +2,22 @@
 <div class="breadcrumb text">
 	<a href="#!/albums" class="item">Albums</a>
 	<i class="fa fa-arrow-right"></i>
-	<span href="#" class="item">{{ vm.photos[0].getAlbumName() }}</span>
+	<span href="#" class="item">{{ vm.album.getName() }}</span>
 	<i class="fa fa-arrow-right"></i>
 	<span href="#" class="item">Photos <span class="label">{{ vm.photos.length }}</span></span>
 </div>
 
 <div class="action-row action-row-right">
 	<button type="button" class="action-button text" ng-click="vm.deleteAlbum()"><i class="fa fa-trash"></i> DELETE ALBUM</button>
-	<button type="button" class="action-button text"><i class="fa fa-plus-circle"></i> ADD IMAGE</button>
+	<a href="#!/albums/{{vm.album.getId()}}/new" class="action-button text"><i class="fa fa-plus-circle"></i> ADD IMAGE</a>
 </div>
 
 <!-- Page content -->
 <div class="content">
 	<div class="photos">
 		<div class="photo-wrapper" ng-repeat="photo in vm.photos track by $index">
-			<i class="fa fa-times drop-photo-btn" ng-click="vm.deletePhoto($index)"></i>
-			<a href="#!/albums/{{ photo.getAlbumId() }}/photos/{{photo.getId()}}" title="">
+			<i class="fa fa-times drop-photo-btn" ng-click="vm.deletePhoto(photo.getId())"></i>
+			<a href="#!/albums/{{ vm.album.getId() }}/photos/{{photo.getId()}}" title="">
 				<img ng-src="{{ photo.getUrl() }}" alt="" class="photo">
 			</a>
 			<ul class="photo-data text">
