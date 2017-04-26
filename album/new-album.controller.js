@@ -29,6 +29,8 @@ function NewAlbumController($scope, FacebookService, LocalStorage) {
 		var params = {
 			name: album.name,
 			description: album.description,
+			pageId: LocalStorage.getPageId(),
+			access_token: LocalStorage.getPageAccessToken(),
 		}	
 
 		vm.isPublishing = true;
@@ -43,11 +45,11 @@ function NewAlbumController($scope, FacebookService, LocalStorage) {
 					photo = dataURItoBlob(album.photos[i])
 					var fd = new FormData();
 					fd.append('source', photo);
-					FacebookService.publishNewPhoto({albumId: albumId}, fd, function(data){
+					FacebookService.publishNewPhoto({albumId: albumId, access_token: LocalStorage.getPageAccessToken(), pageId: LocalStorage.getPageId()}, fd, function(data){
 						uploadedPhotos -= 1
 						if (uploadedPhotos == 0) {
 							console.log("fetch fotos with album id " + albumId);
-							FacebookService.getPhotos({albumId: albumId}, null, function(response) {
+							FacebookService.getPhotos({albumId: albumId, access_token: LocalStorage.getPageAccessToken(), pageId: LocalStorage.getPageId()}, null, function(response) {
 								console.log("positive response", response);
 								var photos = {
 									"albumId": albumId,

@@ -43,12 +43,12 @@ function AddNewAlbumPhotoController($scope, FacebookService, LocalStorage, album
 
 			var fd = new FormData();
 			fd.append('source', photo);
-			FacebookService.publishNewPhoto({albumId: vm.album.id}, fd, function(data){
+			FacebookService.publishNewPhoto({albumId: vm.album.id, access_token: LocalStorage.getPageAccessToken(), pageId: LocalStorage.getPageId()}, fd, function(data){
 				console.log("created photo", data);
 				uploadedPhotos -= 1
 				if (uploadedPhotos == 0) {
 					vm.showPublishSuccessFeedback();
-					FacebookService.getPhotos({albumId: vm.album.id}, null, function(response) {
+					FacebookService.getPhotos({albumId: vm.album.id, access_token: LocalStorage.getPageAccessToken(), pageId: LocalStorage.getPageId()}, null, function(response) {
 						console.log("photos response", response)
 						var photos = {"data": response.data}
 						// console.log("myAlbum", photos[0].album);

@@ -27,9 +27,9 @@
 
 		function publishComment(message) {
 			if (message !== undefined) {
-				var payload = {message: message, photoId: vm.photoDetails.id}
+				var payload = {message: message, photoId: vm.photoDetails.id, access_token: LocalStorage.getPageAccessToken(), pageId: LocalStorage.getPageId()};
 				FacebookService.publishComment(payload, null, function(data) {
-					FacebookService.getComment({commentId: data.id}, null, function(data) {
+					FacebookService.getComment({commentId: data.id, access_token: LocalStorage.getPageAccessToken(), pageId: LocalStorage.getPageId()}, null, function(data) {
 						var comment = {
 							id: data.id,
 							from: data.from,
@@ -49,10 +49,10 @@
 
 		function publishCommentReply(replyMessage, commentId) {
 			if (replyMessage !== undefined) {
-				var payload = {message: replyMessage, commentId: commentId}
+				var payload = {message: replyMessage, commentId: commentId, access_token: LocalStorage.getPageAccessToken(), pageId: LocalStorage.getPageId()};
 				FacebookService.publishCommentReply(payload, null, function(response) {
 					var replyId = response.id
-					FacebookService.getComment({commentId: replyId}, function(response) {
+					FacebookService.getComment({commentId: replyId, access_token: LocalStorage.getPageAccessToken(), pageId: LocalStorage.getPageId()}, function(response) {
 						LocalStorage.addNewPhotoCommentReply(response, commentId, vm.photoId, vm.albumId);
 						vm.updateCommmentRepliesList(ModelParserUtil.parseToCommentObject(response), commentId);
 					}, function(response) {

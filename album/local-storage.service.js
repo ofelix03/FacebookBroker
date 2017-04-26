@@ -44,6 +44,65 @@
     		putPhoto: putPhoto,
 
     		removePhoto: removePhoto,
+
+    		putUserAccessToken: putUserAccessToken,
+
+    		getUserAccessToken: getUserAccessToken,
+
+    		putUserId: putUserId,
+
+    		getUserId: getUserId,
+
+    		putPageAccessToken: putPageAccessToken,
+
+    		getPageAccessToken: getPageAccessToken,
+
+    		getPageId: getPageId,
+
+    		putPageId: putPageId,
+
+    		cleanEverything: cleanEverything,
+    	}
+
+    	function cleanEverything() {
+    		localStorage.clear();
+    	}
+    	
+    	function putUserAccessToken(token) {
+    		localStorage.setItem('user_access_token', token);
+    	}
+
+    	function getUserAccessToken() {
+    		return localStorage.getItem('user_access_token');
+    	}
+
+    	function putUserId(id) {
+    		localStorage.setItem('user_id', id);
+    	}
+
+    	function getUserId() {
+    		return localStorage.getItem('user_id');
+    	}
+
+    	function putPageAccessToken(accessToken) {
+    		console.log("puting access token", accessToken);
+    		localStorage.setItem("page_access_token", accessToken);
+    	}
+
+    	function getPageAccessToken() {
+    		var token = localStorage.getItem('page_access_token');
+    		console.log('getting access token ', token)
+
+    		return token;
+    	}
+
+    	function putPageId(pageId) {
+    		console.log("pageId = ", pageId);
+    		localStorage.setItem("page_id", pageId)
+    	}
+
+    	function getPageId() {
+    		return localStorage.getItem('page_id');
     	}
 
     	function putAlbums(albums) { // albums = [{...}, {...}]
@@ -264,7 +323,7 @@
 					return photos.data;
 				}
 
-				return photos;
+				// return photos;
 			}
 
 			return null
