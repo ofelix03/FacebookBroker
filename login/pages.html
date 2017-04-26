@@ -1,0 +1,39 @@
+<style type="text/css" media="screen">
+	.container {
+		padding: 20px;
+	}
+	.container header {
+		text-align: center;
+	}
+	.content {
+		width: 50%;
+		margin: auto auto;
+		text-align: center;
+	}
+
+	.container select {
+		border: 2px solid #ccc;
+		padding: 10px;
+		border-radius: 4px;
+		width: 200px;
+		background: transparent;
+		font-weight: 500;
+		color: #444;	
+		font-size: 20px;
+	}
+
+	.container select option {
+		font-size: 18px;
+		font-weight: 500;
+	}
+</style>
+<div class="container">
+	<header>
+		<h1>Select page to continue:</h1>
+	</header>
+	<form class="content">
+		<select ng-model="vm.selectedPage" 
+			ng-options="page.name for page in vm.pages" ng-change="vm.onPageSelect()">
+		</select>
+</form>
+</div>
