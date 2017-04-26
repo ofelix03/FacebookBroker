@@ -105,47 +105,16 @@
 		/** Login Page  */
 		.login-page {
 			height: 100%;
-			background: #5380E5;
 			display: block;
-			padding-top: 10%;
 		}
 
-		.login-form {
+		.facebook-login-btn {
 			width: 50%;
-			height: 30%;
-			border: 1px solid #867CF0;
-			border-radius: 4px;
-			padding: 5% 10px;
-			margin: auto;
-
-		}
-
-		.form-input {
-			width: 50%;
-			margin: 5px auto;
-			padding: 12px;
-			display: block;
-			border: 1px solid #5380E5;
-			border-radius: 4px;
-			height: 20px;
-			color: #888;
-			font-size: 16px;
-
-		}
-
-
-		.submit-btn {
-			border: 1px solid #5380E5;
-			background: #B5A2A2;
-			color: #FFF;
-			padding: 10px;
-			border-radius: 4px;
-			width: 50%;
-			display: block;
 			margin: auto auto;
-			font-weight: bold;
+			display: block;
 		}
 
+		
 
 
 		/** Albums Page */
@@ -911,25 +880,25 @@
 	<script type="text/javascript" src="album/image-uploader-directive.js"></script>
 
 	<script type="text/javascript" src="album/models.js"></script>
-	<script type="text/javascript" src="facebook-sdk.js"></script>
 
-	<script  type="text/javascript">
-		var token = "EAACEdEose0cBACTBt9FPJcPBoZCvCC3p7nlbXHZCZADKodSkTi3cuhxdMdyX2ejD9HmqBuiYvnZAbdBJ0g9oNSGcwGGiQbhJOuORWfWzZCzN2V0IZB20LjRwnLcJffmNGQqhv5YWfPWBUTtFKZAXmMGWYadAYeEiptplAWV6VLEEDIy4aTTWHCbgtjTtuZAoyEsZD";
+	<script>
+		var APP_ID = "1028957697237370";
+		window.fbAsyncInit = function() {
+			FB.init({
+				appId      : APP_ID,
+				xfbml      : true,
+				version    : 'v2.9',
+			});
+			FB.AppEvents.logPageView();
+		};
 
-		FB.init({ 
-			appId: '1028957697237370',
-			status: true, 
-			cookie: true, 
-			xfbml: true,
-			version: 'v2.4'
-		});
-
-		FB.getLoginStatus(function(response) {
-			console.log("myresponse", response);
-		});
-
+		(function(d, s, id){
+			var js, fjs = d.getElementsByTagName(s)[0];
+			if (d.getElementById(id)) {return;}
+			js = d.createElement(s); js.id = id;
+			js.src = "//connect.facebook.net/en_US/sdk.js";
+			fjs.parentNode.insertBefore(js, fjs);
+		}(document, 'script', 'facebook-jssdk'));
 	</script>
-
-
 </body>
 </html>
