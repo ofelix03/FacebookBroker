@@ -28,14 +28,13 @@ angular.module('facebookBrokerApp', [
 				} else {
 					console.log("has no page info");
 					// Let's get data over the wire
-					FacebookService.getPageInfo(null, function(response) {
+					FacebookService.getPageInfo({pageId: LocalStorage.getPageId(), access_token: LocalStorage.getPageAccessToken()}, function(response) {
 						console.log('response is', response);
 						LocalStorage.putPageInfo(response);
 						page = ModelParserUtil.parseToPageObject(response);
 						deferred.resolve(page);
 					});
 				}
-
 				return deferred.promise;
 			}
 		}
@@ -46,6 +45,13 @@ angular.module('facebookBrokerApp', [
 		templateUrl: "/login/login.html",
 		controllerAs: "vm",
 		controller: "LoginController",
+	})
+
+	.state('selectPage', {
+		url: '^/select-page',
+		templateUrl: 'login/pages.html',
+		controllerAs: 'vm',
+		controller: 'PageSelectionController',
 	})
 
 	.state('app.albums', {
@@ -69,23 +75,24 @@ angular.module('facebookBrokerApp', [
 					deferred.resolve(albums)
 				} else {
 					// Let's get data over the wire
-					FacebookService.getAlbums(null, function(response){
+					FacebookService.getAlbums({pageId: LocalStorage.getPageId(), access_token: LocalStorage.getPageAccessToken()}, function(response){
 						console.log("albums response", response);
 						//response = {
 						//	albums: {
 						//		data: [{...}, {..}]
 						//	}
 						//}
-						LocalStorage.putAlbums(response.albums.data);
-						console.log('page albums', response);
 						albums = [];
-						for (var i = 0; i < response.albums.data.length; i++) {
-							albums.push(ModelParserUtil.parseToAlbumObject(response.albums.data[i]));
+						if (response.albums !== undefined) {
+							LocalStorage.putAlbums(response.albums.data);
+							console.log('page albums', response);
+							for (var i = 0; i < response.albums.data.length; i++) {
+								albums.push(ModelParserUtil.parseToAlbumObject(response.albums.data[i]));
+							}
 						}
 						deferred.resolve(albums);
 					});
 				}
-
 				return deferred.promise;
 			}
 		}
@@ -154,7 +161,7 @@ angular.module('facebookBrokerApp', [
 					deferred.resolve(albumModel);
 				} else {
 					console.log("getting album fresh from wire");
-					FacebookService.getAlbum({albumId: $stateParams.albumId}, null, function(response) {
+					FacebookService.getAlbum({albumId: $stateParams.albumId, access_token: LocalStorage.getPageAccessToken(), pageId: LocalStorage.getPageId()}, null, function(response) {
 						console.log("albumDataResponse", response);
 						LocalStorage.putAlb
 					}, function(response){
@@ -209,7 +216,7 @@ angular.module('facebookBrokerApp', [
 					deferred.resolve(photos);
 				} else {
 					console.log("fetchign new data over the wire");
-					FacebookService.getPhotos({albumId: $stateParams.albumId}, function(response) {
+					FacebookService.getPhotos({albumId: $stateParams.albumId, access_token: LocalStorage.getPageAccessToken(), pageId: LocalStorage.getPageId()}, function(response) {
 						console.log("freshResponse", response);
 						LocalStorage.putPhotos($stateParams.albumId, response);
 						var photos = [], photoObject, photo, photosArray;
@@ -252,4 +259,11 @@ angular.module('facebookBrokerApp', [
 		}
 	})
 
-});
+})
+
+.run(function($rootScope) {
+	$rootScope = {
+		'USER_ACCESS_TOKEN': null,
+		'USER_ID': null,
+	}
+})
