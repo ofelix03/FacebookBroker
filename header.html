@@ -13,14 +13,13 @@
 			<div class="menu">
 				<i class="fa  fa-lg fa-caret-up"></i>
 				<div class="user-name-n-avatar">
-					<img src="/img/appboy.jpeg" alt="" class="user-avatar">
+					<img ng-src="{{ $ctrl.pageInfo.getCover() }}" alt="" class="user-avatar">
 					<p class="user-name">{{$ctrl.pageInfo.getUsername()}}</p>
 					<p class="clear"></p>
 				</div>
 				<ul class="menu-items">
 					<li class="item"><a href="" title="">Notification <span class="label label-right">3</span></a></li>
-					<li class="item"><a href="" title="">Pages <span class="label">2</span></a></li>
-					<li class="item"><a href="" title="">Logout</a></li>
+					<li class="item"><a href="" title="" ng-click="$ctrl.onLogout()">Logout</a></li>
 				</ul>
 			</div>
 		</div>

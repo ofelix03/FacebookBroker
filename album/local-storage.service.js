@@ -169,14 +169,6 @@
 
     	function getAlbum(albumId) {
     		console.log("getAlbum()")
-    		// photos = getPhotos(albumId);
-
-    		// if (photos !== null) {
-	    	// 	return photos[0].album;
-    		// }
-
-    		// return null;
-    		// 
     		albums = getAlbums();
     		console.log('albums', albums);
     		foundAlbum = null;

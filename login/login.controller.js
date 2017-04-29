@@ -4,7 +4,6 @@ angular.module('login')
 
 LoginController.$inject = ['FacebookAuthenticator', 'LocalStorage', '$state', '$rootScope']
 function LoginController(FacebookAuthenticator, LocalStorage, $state, $rootScope) {
-	console.log(FacebookAuthenticator)
 	var vm = this;
 
 	vm.loginIntoFacebook = loginIntoFacebook;
@@ -19,39 +18,32 @@ function LoginController(FacebookAuthenticator, LocalStorage, $state, $rootScope
 			console.log("response", response);
 			if (response.status == "connected") {
 				console.log('already logged in', response);
-				$rootScope.USER_ID = response.authResponse.id;
-				$rootScope.USER_ACCESS_TOKEN = response.authResponse.accessToken;
-
+				$rootScope.pageInfo.USER_ID = response.authResponse.id;
+				$rootScope.pageInfo.USER_ACCESS_TOKEN = response.authResponse.accessToken;
+				// $rootScope.pageInfo.isLoggedIn = true;
 				LocalStorage.putUserId(response.authResponse.id)
 				LocalStorage.putUserAccessToken(response.authResponse.accessToken);
-				vm.isLoggedIn = true;
+				$state.go('selectPage');
 			} else {
 				console.log('not logged in')
-				loggedIn = FacebookAuthenticator.login()
-				console.log("loggedIn", loggedIn)
-				if (loggedIn) {
-					console.log("we are logged in, let redirect to albums page", loggedIn)
-					$rootScope.USER_ID = response.authResponse.id;
-					$rootScope.USER_ACCESS_TOKEN = response.authResponse.accessToken;
-
-					LocalStorage.putUserId(response.authResponse.id)
-					LocalStorage.putUserAccessToken(response.authResponse.accessToken);
-					vm.isLoggedIn = true;
-				} else {
-					console.log('somethign went wrong with log in');
-				}
-			}
-
-			if (vm.isLoggedIn) {
-				$state.go('selectPage');
+				FacebookAuthenticator.login(function(response) {
+					if (response.status == "connected") {
+						$rootScope.USER_ID = response.authResponse.id;
+						$rootScope.USER_ACCESS_TOKEN = response.authResponse.accessToken;
+						$rootScope.isLoggedIn = true;
+						LocalStorage.putUserId(response.authResponse.id);
+						LocalStorage.putUserAccessToken(response.authResponse.accessToken);
+						$state.go('selectPage');
+					}
+				});
 			}
 		});
 	}
 }
 
 
-PageSelectionController.$inject = ['$state', 'LocalStorage', 'FacebookService']
-function PageSelectionController($state, LocalStorage, FacebookService) {
+PageSelectionController.$inject = ['$state', '$rootScope', 'LocalStorage', 'FacebookService']
+function PageSelectionController($state, $rootScope, LocalStorage, FacebookService) {
 	console.log("PageSelectionController")
 	var vm = this;
 
@@ -91,6 +83,10 @@ function PageSelectionController($state, LocalStorage, FacebookService) {
 			console.log("selected page is ", vm.selectedPage)
 			LocalStorage.putPageId(vm.selectedPage.id);
 			LocalStorage.putPageAccessToken(vm.selectedPage.access_token);
+
+			$rootScope.pageInfo.PAGE_ID = vm.selectedPage.id;
+			$rootScope.pageInfo.PAGE_ACCESS_TOKEN = vm.selectedPage.access_token;
+
 			$state.go("app.albums", {})
 		}
 	}

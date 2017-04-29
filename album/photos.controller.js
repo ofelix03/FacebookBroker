@@ -15,7 +15,7 @@ function PhotosController(photos, album, FacebookService, LocalStorage) {
 
 	function deletePhoto(photoId) {
 		console.log('delete photo with ID ' + photoId);
-		FacebookService.deletePhoto({photoId: photoId}, null, function(response) {
+		FacebookService.deletePhoto({photoId: photoId, access_token: LocalStorage.getPageAccessToken(), pageId: LocalStorage.getPageId()}, null, function(response) {
 			console.log("delete photo response", response);
 			for (var i = 0; i < vm.photos.length; i++) {
 				console.log("loop")

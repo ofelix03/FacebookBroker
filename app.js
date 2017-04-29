@@ -17,6 +17,14 @@ angular.module('facebookBrokerApp', [
 		templateUrl: "app.html",
 		controllerAs: "vm",
 		resolve: {
+			// authenticate: function($state, FacebookAuthenticator, LocalStorage) {
+			// 	console.log("LocalStorage.egtPageAccessToken()", LocalStorage.getPageAccessToken());
+			// 	if (LocalStorage.getPageAccessToken() === null) {
+			// 		$state.go("login");
+			// 	} else {
+			// 		console.log('not null');
+			// 	}
+			// },
 			pageInfo: function($q, FacebookService, LocalStorage) {
 				var deferred = $q.defer();	
 				var page, response;
@@ -77,11 +85,6 @@ angular.module('facebookBrokerApp', [
 					// Let's get data over the wire
 					FacebookService.getAlbums({pageId: LocalStorage.getPageId(), access_token: LocalStorage.getPageAccessToken()}, function(response){
 						console.log("albums response", response);
-						//response = {
-						//	albums: {
-						//		data: [{...}, {..}]
-						//	}
-						//}
 						albums = [];
 						if (response.albums !== undefined) {
 							LocalStorage.putAlbums(response.albums.data);
@@ -138,12 +141,10 @@ angular.module('facebookBrokerApp', [
 				console.log("myalbum", album)
 				album = ModelParserUtil.parseToAlbumObject(album)
 				console.log('album', album)
-
 				return album;
 			}
 		}
 	})
-
 
 	.state('app.photos', {
 		url: "^/albums/:albumId/photos",
@@ -168,7 +169,6 @@ angular.module('facebookBrokerApp', [
 						console.log("AlbumDataResponseFailed", response);
 					});
 				}
-
 				return deferred.promise;
 			},
 			photos: function($stateParams, FacebookService, $q, LocalStorage) {
@@ -261,9 +261,54 @@ angular.module('facebookBrokerApp', [
 
 })
 
-.run(function($rootScope) {
-	$rootScope = {
-		'USER_ACCESS_TOKEN': null,
-		'USER_ID': null,
-	}
+.run(function($rootScope, $state, LocalStorage) {
+	// $rootScope = {
+	// 	USER_ACCESS_TOKEN: null,
+	// 	USER_ID: null,
+	// 	isLoggedIn: false
+	// }
+	// 
+	$rootScope.pageInfo = {
+		USER_ID: LocalStorage.getUserId() || null,
+		USER_ACCESS_TOKEN: LocalStorage.getUserAccessToken() || null,
+		PAGE_ACCESS_TOKEN: LocalStorage.getPageAccessToken() || null,
+		PAGE_ID: LocalStorage.getPageId() || null,
+	};
+
+	$rootScope.logout = function() {
+		LocalStorage.cleanEverything();
+
+		// @todo FacebookAuthenticator.logout(function(resposne) {
+		//  $stage.go("login")
+		// })
+		// 
+		$state.go("login");
+	};
+
+
+	$rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams, options){ 
+		console.log("toState", toState)
+		console.log("pageINfo", $rootScope.pageInfo)
+		console.log("from local storage", LocalStorage.getPageAccessToken());
+		console.log("access token", $rootScope.pageInfo.PAGE_ACCESS_TOKEN === null);
+		if (toState.name.indexOf("app") >= 0) {
+			// event.preventDefault();
+			if ($rootScope.pageInfo.PAGE_ACCESS_TOKEN === null) {
+				console.log("routing to login page");
+				$state.go('login');
+				event.preventDefault();
+			} 
+		}
+
+		if (toState.name.indexOf("selectPage") >= 0) {
+			if ($rootScope.pageInfo.USER_ACCESS_TOKEN === null) {
+				console.log("routing back to login page");
+				$state.go("login");
+				event.preventDefault();
+			}
+		}
+	})
+
+
+
 })

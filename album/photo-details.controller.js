@@ -11,22 +11,90 @@
 		vm.photoId = $stateParams.photoId;
 		vm.photoDetails = photoDetails;
 		vm.comment = {
-			message: "",
+			message: null,
 			replyMessage: [vm.photoDetails.getCommentsCount()]
+		}
+
+		vm.isPublishingComment = false;
+		vm.isPuslishingCommentReply = [];
+		for (var i in vm.photoDetails.getComments()) {
+			vm.isPuslishingCommentReply.push(false);
 		}
 
 		for (var i = 0; i < vm.comment.replyMessage.length; i++) {
 			vm.comment.replyMessage[i] = "";
 		}
 
+		vm.commentReplyThreadsVisible = []
+		hideAllCommentReplyThreads();
+
+
+		function hideAllCommentReplyThreads() {
+			for (var i in vm.photoDetails.getComments()) {
+				vm.commentReplyThreadsVisible.push(false);
+			}
+		}
+
+		function showReplyThreadsForComment(commentId) {
+			if (commentId !== undefined) {
+				for (var i in vm.photoDetails.getComments()) {
+					if (vm.photoDetails.getComments()[i].id === commentId) {
+						console.log("comment found, let show it reply threads");
+						vm.commentReplyThreadsVisible[i] = true;
+					}
+				}
+			}
+		}
+
+		function hideReplyThreadsForComment(commentId) {
+			if (commentId !== undefined) {
+				for (var i in vm.photoDetails.getComments()) {
+					if (vm.photoDetails.getComments()[i].id === commentId) {
+						console.log("comment found, let show it reply threads");
+						vm.commentReplyThreadsVisible[i] = false;
+					}
+				}
+			}
+		}
+
+
 
 		vm.updateCommentList = updateCommentList;
 		vm.updateCommmentRepliesList = updateCommmentRepliesList;
 		vm.publishComment = publishComment;
 		vm.publishCommentReply = publishCommentReply;
+		vm.onCommentReplyIconClick = onCommentReplyIconClick;
+
+		function onCommentReplyIconClick(commentIndex) {
+			console.log("onCommentReplyIconClick");
+			if (vm.commentReplyThreadsVisible[commentIndex] === false) {
+				vm.commentReplyThreadsVisible[commentIndex] = true;
+			} else {
+				vm.commentReplyThreadsVisible[commentIndex] = false;
+			}
+		}
+
+		function showIsPublishingCommentFeedback() {
+			vm.isPublishingComment = true;
+		}
+
+		function hideIsPublishingCommentFeedback() {
+			vm.isPublishingComment = false;
+		}
+
+		function showIsPublishingCommentFeedbackReplyFeedback(commentIndex) {
+			vm.isPuslishingCommentReply[commentIndex] = true;
+		}
+
+		function hideIsPublishingCommentFeedbackReplyFeedback(commentIndex) {
+			vm.isPuslishingCommentReply[commentIndex] = false;
+		}
 
 		function publishComment(message) {
-			if (message !== undefined) {
+			console.log("message", message)
+			if (message !== null) {
+				console.log("messsage again", message)
+				showIsPublishingCommentFeedback();
 				var payload = {message: message, photoId: vm.photoDetails.id, access_token: LocalStorage.getPageAccessToken(), pageId: LocalStorage.getPageId()};
 				FacebookService.publishComment(payload, null, function(data) {
 					FacebookService.getComment({commentId: data.id, access_token: LocalStorage.getPageAccessToken(), pageId: LocalStorage.getPageId()}, null, function(data) {
@@ -38,6 +106,7 @@
 						}
 						LocalStorage.addNewPhotoComment(comment, vm.photoId, vm.albumId)
 						vm.updateCommentList(ModelParserUtil.parseToCommentObject(comment))
+						hideIsPublishingCommentFeedback();
 					});
 				}, function(data){
 					console.log("publish comment failed", data)
@@ -47,14 +116,16 @@
 			}
 		}
 
-		function publishCommentReply(replyMessage, commentId) {
+		function publishCommentReply(replyMessage, commentId, commentIndex) {
 			if (replyMessage !== undefined) {
+				showIsPublishingCommentFeedbackReplyFeedback(commentIndex)
 				var payload = {message: replyMessage, commentId: commentId, access_token: LocalStorage.getPageAccessToken(), pageId: LocalStorage.getPageId()};
 				FacebookService.publishCommentReply(payload, null, function(response) {
 					var replyId = response.id
 					FacebookService.getComment({commentId: replyId, access_token: LocalStorage.getPageAccessToken(), pageId: LocalStorage.getPageId()}, function(response) {
 						LocalStorage.addNewPhotoCommentReply(response, commentId, vm.photoId, vm.albumId);
 						vm.updateCommmentRepliesList(ModelParserUtil.parseToCommentObject(response), commentId);
+						hideIsPublishingCommentFeedbackReplyFeedback(commentIndex)
 					}, function(response) {
 						console.log("comment reply payload failed with payload", response)
 					});

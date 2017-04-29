@@ -1,7 +1,5 @@
 <style type="text/css" media="screen">
-	.container {
-		padding: 20px;
-	}
+	
 	.container header {
 		text-align: center;
 	}
@@ -27,13 +25,14 @@
 		font-weight: 500;
 	}
 </style>
-<div class="container">
+<center><h1>Facebook Broker</h1></center>
+<div class="login-container">
 	<header>
 		<h1>Select page to continue:</h1>
 	</header>
 	<form class="content">
 		<select ng-model="vm.selectedPage" 
-			ng-options="page.name for page in vm.pages" ng-change="vm.onPageSelect()">
-		</select>
+		ng-options="page.name for page in vm.pages" ng-change="vm.onPageSelect()">
+	</select>
 </form>
 </div>

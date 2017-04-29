@@ -8,6 +8,7 @@
 		controller: HeaderController,
 		bindings: {
 			pageInfo: "<",
+			onLogout: "<",
 		}
 	});
 

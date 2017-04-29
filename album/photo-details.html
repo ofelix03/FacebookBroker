@@ -1,10 +1,10 @@
 <!-- Breadcrumb -->
 <div class="breadcrumb">
-	<span href="#" class="item">Albums</span>
-	<i class="fa fa-arrow-right"></i>
+	<a href="#!/albums" class="item">Albums</a>
+	<!-- <i class="fa fa-arrow-right"></i>
 	<span href="#" class="item">{{ vm.photoDetails.getAlbumName() }}</span>
 	<i class="fa fa-arrow-right" ng-show="vm.photoDetails.getName()"></i>
-	<span href="#" class="item">{{ vm.photoDetails.getName() }}</span>
+	<span href="#" class="item">{{ vm.photoDetails.getName() }}</span> -->
 </div>
 
 <!-- Page content -->
@@ -13,7 +13,6 @@
 		<img src="{{ vm.photoDetails.getUrl() }}" alt="" class="photo-central">
 		<div class="photo-central-name">{{ vm.photoDetails.getName() }}</div>
 	</div>
-
 	<div class="photo-comments-section">
 		<div class="row">
 			<div class="comments-header">
@@ -34,7 +33,7 @@
 			<p ng-show="vm.photoDetails.getCommentsCount() === 0" class="text-center"><strong><em>No comments</em></strong></p>
 			<div class="comment-thread response-box-wrapper">
 				<textarea name="response-box" placeholder="New comment goes here..." class="comment-textbox" ng-model="vm.comment.message"></textarea>
-				<button type="button" class="send-btn" ng-click="vm.publishComment(vm.comment.message)">SEND</button>
+				<button type="button" class="send-btn" ng-click="vm.publishComment(vm.comment.message)"><span ng-hide="vm.isPublishingComment === true">SEND</span> <i class="fa fa-spinner fa-spin" ng-show="vm.isPublishingComment === true"></i></button>
 			</div>
 			<div ng-repeat="comment in vm.photoDetails.getComments()" class="comment-wrapper">
 				<div class="comment-thread" >
@@ -42,15 +41,17 @@
 					<div class="thread-message	">
 						<span class="author">{{ comment.getAuthor() }}</span>&nbsp;<span class="date">{{ comment.getCreatedAt() }}</span>
 						<span class="text">{{ comment.getMessage() }}</span>
-						<div class="comment-message-response-action">
-							<i class="action fa fa-reply"></i>&nbsp;&nbsp;<strong>{{comment.getRepliesCount()}}</strong>
+						<div class="comment-message-response-action" ng-click="vm.onCommentReplyIconClick($index)">
+							<i class="action fa fa-reply" ></i>&nbsp;&nbsp;<strong>{{comment.getRepliesCount()}}</strong>
 						</div>
 					</div>
 				</div>
-				<div class="comment-thread-responses">
+				<div class="comment-thread-responses" ng-hide="vm.commentReplyThreadsVisible[$index] === false" >
 					<div class="comment-thread response-box-wrapper">
 						<textarea name="response-box" placeholder="Reply goes here..." class="reply-textbox" ng-model="vm.comment.replyMessage[$index]"></textarea>
-						<button type="button" class="send-btn" ng-click="vm.publishCommentReply(vm.comment.replyMessage[$index], comment.getId())">SEND</button>
+						<button type="button" class="send-btn" ng-click="vm.publishCommentReply(vm.comment.replyMessage[$index], comment.getId(), $index)">
+						<span ng-hide="vm.isPuslishingCommentReply[$index] === true">SEND</span>
+						<i class="fa fa-spinner fa-spin" ng-show="vm.isPuslishingCommentReply[$index] === true"></i></button>
 					</div>
 					<div class="comment-thread" ng-repeat="reply in comment.getReplies()">
 						<img ng-src="{{ reply.getAuthorAvatar() }}" alt="" class="thread-author-avatar">
@@ -61,9 +62,6 @@
 					</div>
 				</div>
 			</div>
-
-
-			
 		</div>
 	</div>
 </div>

@@ -17,6 +17,7 @@
 		return {
 			isConnected: isConnected,
 			login: login,
+			logout: logout,
 		};
 
 
@@ -24,16 +25,19 @@
 			FB.getLoginStatus(responseCallback);
 		}
 
-		function login() {
-			FB.login(function(response) {
-				if (response.status == "connected") {
-					return response.authResponse;
-				}
-				return false;
-			},  {
+		function login(successCallback) {
+			FB.login(successCallback, {
 				scope: 'publish_actions,publish_pages,manage_pages', 
 				return_scopes: true
 			});
+		}
+
+		function logout(successCallback, failCallback) {
+			if (successCallback !== undefined && failCallback !== undefined) {
+				FB.logout(successCallback, failCallback);
+			} else if (successCallback !==  undefined) {
+				FB.logout(successCallback);
+			} 
 		}
 	}
 
