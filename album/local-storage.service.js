@@ -4,109 +4,109 @@
 	angular.module('services')
 	.factory('LocalStorage', LocalStorage);
 
-    LocalStorage.$inject = [];
-    function LocalStorage() {
-    	var localStorage = window.localStorage;
-    	var PAGE_INFO_KEY = "pageInfo",
-    	ALBUMS_LIST_KEY = "albums",
-    	PHOTOS_KEY = "photos",
-    	pageInfo;
+	LocalStorage.$inject = [];
+	function LocalStorage() {
+		var localStorage = window.localStorage;
+		var PAGE_INFO_KEY = "pageInfo",
+		ALBUMS_LIST_KEY = "albums",
+		PHOTOS_KEY = "photos",
+		pageInfo;
 
-    	return {
-    		PAGE_INFO_KEY: PAGE_INFO_KEY,
+		return {
+			PAGE_INFO_KEY: PAGE_INFO_KEY,
 
-    		putPageInfo: putPageInfo,
+			putPageInfo: putPageInfo,
 
-    		getPageInfo: getPageInfo,
+			getPageInfo: getPageInfo,
 
-    		putAlbums: putAlbums,
+			putAlbums: putAlbums,
 
-    		setAlbums: setAlbums,
+			setAlbums: setAlbums,
 
-    		getAlbums: getAlbums,
+			getAlbums: getAlbums,
 
-    		getAlbum: getAlbum,
+			getAlbum: getAlbum,
 
-    		putAlbum: putAlbum,
+			putAlbum: putAlbum,
 
-    		putPhotos: putPhotos,	
+			putPhotos: putPhotos,	
 
-    		getPhotos: getPhotos,
+			getPhotos: getPhotos,
 
-    		getPhoto: getPhoto,
+			getPhoto: getPhoto,
 
-    		getPhotoDetails: getPhotoDetails,
+			getPhotoDetails: getPhotoDetails,
 
-    		addNewPhotoComment: addNewPhotoComment,
+			addNewPhotoComment: addNewPhotoComment,
 
-    		addNewPhotoCommentReply: addNewPhotoCommentReply,
+			addNewPhotoCommentReply: addNewPhotoCommentReply,
 
-    		putPhoto: putPhoto,
+			putPhoto: putPhoto,
 
-    		removePhoto: removePhoto,
+			removePhoto: removePhoto,
 
-    		putUserAccessToken: putUserAccessToken,
+			putUserAccessToken: putUserAccessToken,
 
-    		getUserAccessToken: getUserAccessToken,
+			getUserAccessToken: getUserAccessToken,
 
-    		putUserId: putUserId,
+			putUserId: putUserId,
 
-    		getUserId: getUserId,
+			getUserId: getUserId,
 
-    		putPageAccessToken: putPageAccessToken,
+			putPageAccessToken: putPageAccessToken,
 
-    		getPageAccessToken: getPageAccessToken,
+			getPageAccessToken: getPageAccessToken,
 
-    		getPageId: getPageId,
+			getPageId: getPageId,
 
-    		putPageId: putPageId,
+			putPageId: putPageId,
 
-    		cleanEverything: cleanEverything,
-    	}
+			cleanEverything: cleanEverything,
+		}
 
-    	function cleanEverything() {
-    		localStorage.clear();
-    	}
-    	
-    	function putUserAccessToken(token) {
-    		localStorage.setItem('user_access_token', token);
-    	}
+		function cleanEverything() {
+			localStorage.clear();
+		}
 
-    	function getUserAccessToken() {
-    		return localStorage.getItem('user_access_token');
-    	}
+		function putUserAccessToken(token) {
+			localStorage.setItem('user_access_token', token);
+		}
 
-    	function putUserId(id) {
-    		localStorage.setItem('user_id', id);
-    	}
+		function getUserAccessToken() {
+			return localStorage.getItem('user_access_token');
+		}
 
-    	function getUserId() {
-    		return localStorage.getItem('user_id');
-    	}
+		function putUserId(id) {
+			localStorage.setItem('user_id', id);
+		}
 
-    	function putPageAccessToken(accessToken) {
-    		console.log("puting access token", accessToken);
-    		localStorage.setItem("page_access_token", accessToken);
-    	}
+		function getUserId() {
+			return localStorage.getItem('user_id');
+		}
 
-    	function getPageAccessToken() {
-    		var token = localStorage.getItem('page_access_token');
-    		console.log('getting access token ', token)
+		function putPageAccessToken(accessToken) {
+			console.log("puting access token", accessToken);
+			localStorage.setItem("page_access_token", accessToken);
+		}
 
-    		return token;
-    	}
+		function getPageAccessToken() {
+			var token = localStorage.getItem('page_access_token');
+			console.log('getting access token ', token)
 
-    	function putPageId(pageId) {
-    		console.log("pageId = ", pageId);
-    		localStorage.setItem("page_id", pageId)
-    	}
+			return token;
+		}
 
-    	function getPageId() {
-    		return localStorage.getItem('page_id');
-    	}
+		function putPageId(pageId) {
+			console.log("pageId = ", pageId);
+			localStorage.setItem("page_id", pageId)
+		}
+
+		function getPageId() {
+			return localStorage.getItem('page_id');
+		}
 
     	function putAlbums(albums) { // albums = [{...}, {...}]
-    		console.log("putAlbums", albums);
+    	console.log("putAlbums", albums);
 			// First put should be arrayed
 			localStorage.setItem(ALBUMS_LIST_KEY, JSON.stringify(albums));
 		}
@@ -151,15 +151,15 @@
 			return null;
 		}
 
-    	function getPageInfo() {
-    		pageInfo = localStorage.getItem(PAGE_INFO_KEY);
-    		return JSON.parse(pageInfo);
-    	}
+		function getPageInfo() {
+			pageInfo = localStorage.getItem(PAGE_INFO_KEY);
+			return JSON.parse(pageInfo);
+		}
 
-    	function setAlbums(albums) {
-    		albums = JSON.stringify(albums);
-    		localStorage.setItem(ALBUMS_LIST_KEY, albums);
-    	}
+		function setAlbums(albums) {
+			albums = JSON.stringify(albums);
+			localStorage.setItem(ALBUMS_LIST_KEY, albums);
+		}
 
     	// function getAlbums() {
     	// 	albums = localStorage.getItem(ALBUMS_LIST_KEY);
@@ -172,15 +172,15 @@
     		albums = getAlbums();
     		console.log('albums', albums);
     		foundAlbum = null;
-  			for (var i = 0; i < albums.length; i++) {
-  				if (albums[i].id == albumId) {
-  					console.log("album found")
-  					foundAlbum = albums[i];
-  					break;
-  				}
-  			}
+    		for (var i = 0; i < albums.length; i++) {
+    			if (albums[i].id == albumId) {
+    				console.log("album found")
+    				foundAlbum = albums[i];
+    				break;
+    			}
+    		}
 
-  			return foundAlbum;
+    		return foundAlbum;
     	}
 
     	function putPhotos(albumId, photos) {
@@ -212,8 +212,8 @@
 
 				if (exists === false) {
 					// None of the existing cache matches this new insertion, let append it to the cache list
-					newDatum = {albumId: albumId, photos: photos};
-					cachedData.push(newDatum)
+					// newDatum = {albumId: albumId, photos: photos};
+					cachedData.push({albumId: albumId, photos: photos})
 					localStorage.setItem(PHOTOS_KEY, JSON.stringify(cachedData));
 				}
 			}
@@ -301,7 +301,12 @@
 			for(var i = 0; i < cachedData.length; i++) {
 				console.log("loop index " + i)
 				datum = cachedData[i];
+				console.log("myDatumWorld", datum);
+				console.log("albumId == datum.albumId", albumId == datum.albumId);
+				console.log("albumId = " + albumId)
+				console.log("dataum.albumid = " + datum.albumId);
 				if (albumId == datum.albumId) {
+					console.log('datum', datum)
 					console.log("match found")
 					photos = datum.photos;
 					break;
@@ -310,14 +315,13 @@
 			console.log('am here', photos)
 			if (photos !== null) {
 				console.log("not null")
-				console.log("")
 				if (photos.data !== undefined) {
 					return photos.data;
+				} else {
+
+					return photos;
 				}
-
-				// return photos;
-			}
-
+			} 
 			return null
 		}
 
