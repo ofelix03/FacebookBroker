@@ -290,7 +290,6 @@ angular.module('facebookBrokerApp', [
 		console.log("toState", toState)
 		console.log("pageINfo", $rootScope.pageInfo)
 		console.log("from local storage", LocalStorage.getPageAccessToken());
-		console.log("access token", $rootScope.pageInfo.PAGE_ACCESS_TOKEN === null);
 		if (toState.name.indexOf("app") >= 0) {
 			// event.preventDefault();
 			if ($rootScope.pageInfo.PAGE_ACCESS_TOKEN === null) {
