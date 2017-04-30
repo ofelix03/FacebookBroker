@@ -52,10 +52,7 @@ function NewAlbumController($scope, FacebookService, LocalStorage) {
 							FacebookService.getPhotos({albumId: albumId, access_token: LocalStorage.getPageAccessToken(), pageId: LocalStorage.getPageId()}, null, function(response) {
 								console.log("positive response", response);
 								var photos = {
-									"albumId": albumId,
-									"photos": {
-										"data": response.data,
-									}
+									data: response.data,
 								};
 								console.log("photos data", photos);
 								LocalStorage.putPhotos(albumId, photos);
