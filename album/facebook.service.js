@@ -6,7 +6,7 @@
 
 	FacebookAuthenticator.$inject = ['$http']
 	function FacebookAuthenticator($http, $sce) {
-		var APP_ID = "1028957697237370";
+		var APP_ID = "1522396577831865";
 		var APP_SECRET = "fa3e3378eb1528743144d1a8b9b86c81";
 		var CALLBACK_URL = encodeURIComponent("http://192.168.121.86:3000/#!/oauth");
 		var FACEBOOK_OAUTH_URL = "https://www.facebook.com/v2.8/dialog/oauth?client_id=" + APP_ID + "&redirect_uri=" + CALLBACK_URL;
